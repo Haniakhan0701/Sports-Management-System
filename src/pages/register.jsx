@@ -7,7 +7,7 @@ import 'boxicons/css/boxicons.min.css';
 
 const Register = () => {
     const [form, setForm] = useState({
-        name: '',
+        fullName: '',
         rollNumber: '',
         email: '',
         phone: '',
@@ -59,7 +59,7 @@ const Register = () => {
         e.preventDefault();
 
         // Validate required fields
-        const required = ['name', 'rollNumber', 'email', 'phone', 'department', 'semester', 'session', 'sport', 'category'];
+        const required = ['fullName', 'rollNumber', 'email', 'phone', 'department', 'semester', 'session', 'sport', 'category'];
         for (let field of required) {
             if (!form[field]) {
                 setError('Please fill in all fields.');
@@ -71,7 +71,7 @@ const Register = () => {
         setError('');
 
         try {
-            const res = await axios.post('http://localhost:5000/api/register', form);
+            const res = await axios.post('http://localhost:5000/api/registrations', form);
             if (res.data.success) {
                 setSuccess(true);
             }
@@ -84,7 +84,7 @@ const Register = () => {
 
     const resetForm = () => {
         setSuccess(false);
-        setForm({ name: '', rollNumber: '', email: '', phone: '', department: '', semester: '', session: '', sport: '', category: '' });
+        setForm({ fullName: '', rollNumber: '', email: '', phone: '', department: '', semester: '', session: '', sport: '', category: '' });
     };
 
     return (
@@ -209,8 +209,8 @@ const Register = () => {
                                                 Full Name <span className="text-red-500">*</span>
                                             </label>
                                             <input
-                                                name="name"
-                                                value={form.name}
+                                                name="fullName"
+                                                value={form.fullName}
                                                 onChange={handleChange}
                                                 placeholder="e.g. Ahmed Khan"
                                                 className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
