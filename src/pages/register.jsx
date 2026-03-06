@@ -14,7 +14,7 @@ const Register = () => {
         department: '',
         semester: '',
         session: '',
-        sport: '',
+        sports: [],        // ← now an array for multi-select
         category: '',
     });
 
@@ -32,7 +32,6 @@ const Register = () => {
 
     const semesters = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
 
-    // Generate sessions dynamically (last 4 + next 1)
     const currentYear = 2026;
     const sessions = Array.from({ length: 5 }, (_, i) => {
         const start = currentYear - 4 + i;
@@ -40,31 +39,57 @@ const Register = () => {
     });
 
     const sports = [
-        { name: 'Cricket', icon: '🏏' },
-        { name: 'Football', icon: '⚽' },
-        { name: 'Basketball', icon: '🏀' },
-        { name: 'Volleyball', icon: '🏐' },
-        { name: 'Badminton', icon: '🏸' },
-        { name: 'Athletics', icon: '🏃' },
-        { name: 'Tug of War', icon: '🪢' },
-        { name: 'Dodge Ball', icon: '🎯' },
+        { name: 'Cricket',          icon: '🏏', detail: '11 vs 11 · 15 overs' },
+        { name: 'Football',         icon: '⚽', detail: '7 vs 7 · 70 min' },
+        { name: 'Tug of War',       icon: '🪢', detail: '6 vs 6 · Best of 3' },
+        { name: 'Dodge Ball',       icon: '🎯', detail: '6 vs 6 · 12 min' },
+        { name: '100m Race',        icon: '🏃', detail: 'Individual · Sprint' },
+        { name: 'Badminton',        icon: '🏸', detail: 'Singles/Doubles · 21 pts' },
+        { name: 'Bottle Spin Chase',icon: '🍾', detail: '8 per team · 12 min', isNew: true },
+        { name: '4×100m Relay',     icon: '🔁', detail: '4 per team · Relay' },
     ];
 
+    // ── Email validation ──────────────────────────────────────────
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    // ── Handlers ──────────────────────────────────────────────────
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        setError('');
+    };
+
+    const toggleSport = (sportName) => {
+        setForm(prev => ({
+            ...prev,
+            sports: prev.sports.includes(sportName)
+                ? prev.sports.filter(s => s !== sportName)
+                : [...prev.sports, sportName],
+        }));
         setError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate required fields
-        const required = ['fullName', 'rollNumber', 'email', 'phone', 'department', 'semester', 'session', 'sport', 'category'];
+        // Required text fields
+        const required = ['fullName', 'rollNumber', 'email', 'phone', 'department', 'semester', 'session', 'category'];
         for (let field of required) {
             if (!form[field]) {
                 setError('Please fill in all fields.');
                 return;
             }
+        }
+
+        // Email format
+        if (!isValidEmail(form.email)) {
+            setError('Please enter a valid email address (e.g. ahmed@bzu.edu.pk).');
+            return;
+        }
+
+        // At least one sport
+        if (form.sports.length === 0) {
+            setError('Please select at least one sport.');
+            return;
         }
 
         setLoading(true);
@@ -84,8 +109,11 @@ const Register = () => {
 
     const resetForm = () => {
         setSuccess(false);
-        setForm({ fullName: '', rollNumber: '', email: '', phone: '', department: '', semester: '', session: '', sport: '', category: '' });
+        setForm({ fullName: '', rollNumber: '', email: '', phone: '', department: '', semester: '', session: '', sports: [], category: '' });
     };
+
+    // ── Shared input className ────────────────────────────────────
+    const inputCls = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-white";
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -106,8 +134,6 @@ const Register = () => {
                         <p className="text-blue-100 text-lg max-w-xl mx-auto">
                             Represent your Department. Fill in your details below to officially register as an Athlete.
                         </p>
-
-                        {/* Dept chips */}
                         <div className="flex flex-wrap justify-center gap-2 mt-6">
                             {departments.map(d => (
                                 <span key={d.code} className="bg-white/10 border border-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">
@@ -124,7 +150,7 @@ const Register = () => {
             <section className="py-12">
                 <div className="container mx-auto px-4 max-w-2xl">
 
-                    {/* Success State */}
+                    {/* ── Success State ── */}
                     {success ? (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -140,19 +166,18 @@ const Register = () => {
                                 Your registration is <span className="text-orange-500 font-semibold">pending approval</span>. The sports committee will contact you via email or WhatsApp once approved.
                             </p>
 
-                            {/* Summary box */}
                             <div className="bg-gray-50 rounded-xl p-5 text-left mb-8 space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Name</span>
-                                    <span className="font-bold text-gray-900">{form.name || '—'}</span>
+                                    <span className="font-bold text-gray-900">{form.fullName || '—'}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Department</span>
                                     <span className="font-bold text-gray-900">{form.department}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Sport</span>
-                                    <span className="font-bold text-gray-900">{form.sport} · {form.category}</span>
+                                <div className="flex justify-between items-start gap-4">
+                                    <span className="text-gray-500 shrink-0">Sport(s)</span>
+                                    <span className="font-bold text-gray-900 text-right">{form.sports.join(', ')} · {form.category}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Contact</span>
@@ -213,7 +238,7 @@ const Register = () => {
                                                 value={form.fullName}
                                                 onChange={handleChange}
                                                 placeholder="e.g. Ahmed Khan"
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             />
                                         </div>
                                         <div>
@@ -225,7 +250,7 @@ const Register = () => {
                                                 value={form.rollNumber}
                                                 onChange={handleChange}
                                                 placeholder="e.g. 22-CE-01"
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             />
                                         </div>
                                         <div>
@@ -238,7 +263,7 @@ const Register = () => {
                                                 value={form.phone}
                                                 onChange={handleChange}
                                                 placeholder="+92 300 1234567"
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             />
                                         </div>
                                         <div className="md:col-span-2">
@@ -252,7 +277,7 @@ const Register = () => {
                                                 value={form.email}
                                                 onChange={handleChange}
                                                 placeholder="ahmed@bzu.edu.pk"
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             />
                                         </div>
                                     </div>
@@ -264,7 +289,6 @@ const Register = () => {
                                         <i className='bx bx-building text-blue-500'></i> Academic Information
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {/* Department */}
                                         <div className="md:col-span-3">
                                             <label className="block text-sm font-semibold text-gray-700 mb-2">
                                                 Department <span className="text-red-500">*</span>
@@ -299,7 +323,6 @@ const Register = () => {
                                             </div>
                                         </div>
 
-                                        {/* Semester */}
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                                                 Semester <span className="text-red-500">*</span>
@@ -308,7 +331,7 @@ const Register = () => {
                                                 name="semester"
                                                 value={form.semester}
                                                 onChange={handleChange}
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             >
                                                 <option value="">Select Semester</option>
                                                 {semesters.map(s => (
@@ -317,7 +340,6 @@ const Register = () => {
                                             </select>
                                         </div>
 
-                                        {/* Session */}
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                                                 Session <span className="text-red-500">*</span>
@@ -326,7 +348,7 @@ const Register = () => {
                                                 name="session"
                                                 value={form.session}
                                                 onChange={handleChange}
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                                className={inputCls}
                                             >
                                                 <option value="">Select Session</option>
                                                 {sessions.map(s => (
@@ -339,38 +361,61 @@ const Register = () => {
 
                                 {/* ── Section 3: Sport Selection ── */}
                                 <div>
-                                    <h3 className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-4 pb-2 border-b border-gray-100">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-gray-400 uppercase tracking-widest mb-1 pb-2 border-b border-gray-100">
                                         <i className='bx bx-football text-blue-500'></i> Sport Selection
                                     </h3>
+                                    <p className="text-xs text-gray-400 mb-4">You can select multiple sports.</p>
 
-                                    {/* Sport Grid */}
+                                    {/* Sport Grid — checkbox multi-select */}
                                     <div className="mb-4">
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            Choose Sport <span className="text-red-500">*</span>
+                                            Choose Sport(s) <span className="text-red-500">*</span>
                                         </label>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                            {sports.map(s => (
-                                                <label
-                                                    key={s.name}
-                                                    className={`border rounded-xl py-3 px-2 text-center cursor-pointer transition ${
-                                                        form.sport === s.name
-                                                            ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                                                            : 'border-gray-200 text-gray-600 hover:border-blue-300 hover:bg-blue-50'
-                                                    }`}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="sport"
-                                                        value={s.name}
-                                                        checked={form.sport === s.name}
-                                                        onChange={handleChange}
-                                                        className="hidden"
-                                                    />
-                                                    <div className="text-2xl">{s.icon}</div>
-                                                    <div className="text-xs font-bold mt-1">{s.name}</div>
-                                                </label>
-                                            ))}
+                                            {sports.map(s => {
+                                                const selected = form.sports.includes(s.name);
+                                                return (
+                                                    <button
+                                                        type="button"
+                                                        key={s.name}
+                                                        onClick={() => toggleSport(s.name)}
+                                                        className={`relative border rounded-xl py-3 px-2 text-center cursor-pointer transition ${
+                                                            selected
+                                                                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                                                                : 'border-gray-200 text-gray-600 hover:border-blue-300 hover:bg-blue-50'
+                                                        }`}
+                                                    >
+                                                        {s.isNew && (
+                                                            <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                                                                NEW
+                                                            </span>
+                                                        )}
+                                                        {selected && (
+                                                            <span className="absolute top-1.5 left-1.5 text-white text-xs">
+                                                                <i className='bx bx-check-circle'></i>
+                                                            </span>
+                                                        )}
+                                                        <div className="text-2xl">{s.icon}</div>
+                                                        <div className="text-xs font-bold mt-1">{s.name}</div>
+                                                        <div className={`text-[10px] mt-0.5 ${selected ? 'text-blue-100' : 'text-gray-400'}`}>
+                                                            {s.detail}
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
+
+                                        {/* Selected chips summary */}
+                                        {form.sports.length > 0 && (
+                                            <div className="mt-3 flex flex-wrap gap-2">
+                                                {form.sports.map(s => (
+                                                    <span key={s} className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                                        {s}
+                                                        <button type="button" onClick={() => toggleSport(s)} className="ml-1 hover:text-red-500">×</button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Category */}

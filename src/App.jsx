@@ -15,6 +15,8 @@ import ManageGames from './pages/admin/ManageGames';
 import Scores from './pages/admin/Scores';
 import Support from './pages/admin/Support';
 import Register from './pages/Register';
+import Registrations from "./pages/admin/Registrations";
+import Live from './pages/Live';
 
 function App() {
   return (
@@ -30,10 +32,13 @@ function App() {
          <Route path="/media" element={<Media />} />
          <Route path="/about" element={<About />} />
          <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/registrations" element={<Registrations />} />
+
 <Route path="/admin/games" element={<ManageGames />} />
 <Route path="/admin/scores" element={<Scores />} />
 <Route path="/contact" element={<Support />} />
 <Route path="/register" element={<Register/>} />
+<Route path="/live" element={<Live />} />
 
       </Routes>
       <Footer /> {/* Always visible */}

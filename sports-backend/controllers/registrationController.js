@@ -1,113 +1,113 @@
 const Registration = require('../models/Registration');
-const {
-    sendConfirmationEmail,
-    sendAdminNotification,
-} = require('../config/emailService');
 
-// ── POST /api/registrations  →  Submit new registration ──────────────────────
+// ─── POST /api/registrations ─────────────────────────────────────────────────
 const submitRegistration = async (req, res) => {
     try {
         const {
-            fullName, rollNumber, phone, email,
-            department, semester, session,
-            sport, category,
-        } = req.body;
-
-        // Check duplicate: same roll number + sport + category
-        const existing = await Registration.findOne({
-            rollNumber: rollNumber.toUpperCase(),
-            sport,
-            category,
-        });
-
-        if (existing) {
-            return res.status(400).json({
-                success: false,
-                message: `You have already registered for ${sport} (${category}). Duplicate registrations are not allowed.`,
-            });
-        }
-
-        // Create registration
-        const registration = await Registration.create({
             fullName,
-            rollNumber: rollNumber.toUpperCase(),
-            phone,
+            rollNumber,
             email,
+            phone,
             department,
             semester,
             session,
-            sport,
+            sports,
             category,
-            status: 'Pending',
-        });
+        } = req.body;
 
-        // Send emails (don't block response if email fails)
-        try {
-            await sendConfirmationEmail(registration);
-            await sendAdminNotification(registration);
-            registration.confirmationEmailSent = true;
-            await registration.save();
-        } catch (emailError) {
-            console.error('⚠️  Email sending failed:', emailError.message);
-            // Registration still saved — just email failed
+        // Basic validation
+        if (!fullName || !rollNumber || !email || !phone || !department || !semester || !session || !category) {
+            return res.status(400).json({ success: false, message: 'Please fill in all required fields.' });
         }
 
-        return res.status(201).json({
-            success: true,
-            message: 'Registration submitted successfully! Check your email for confirmation.',
-            data: {
-                id: registration._id,
-                fullName: registration.fullName,
-                rollNumber: registration.rollNumber,
-                sport: registration.sport,
-                category: registration.category,
-                status: registration.status,
-            },
-        });
-
-    } catch (error) {
-        // Mongoose duplicate key error
-        if (error.code === 11000) {
-            return res.status(400).json({
-                success: false,
-                message: 'You have already registered for this sport and category.',
-            });
+        if (!sports || (Array.isArray(sports) && sports.length === 0)) {
+            return res.status(400).json({ success: false, message: 'Please select at least one sport.' });
         }
 
-        console.error('Registration error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Server error. Please try again later.',
+        // Check for duplicate roll number
+        const existing = await Registration.findOne({ rollNumber });
+        if (existing) {
+            return res.status(409).json({ success: false, message: 'This roll number is already registered.' });
+        }
+
+        const registration = await Registration.create({
+            fullName,
+            rollNumber,
+            email,
+            phone,
+            department,
+            semester,
+            session,
+            sports: Array.isArray(sports) ? sports : [sports],
+            category,
+            status: 'pending',
         });
+
+        res.status(201).json({ success: true, data: registration });
+
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
-// ── GET /api/registrations/check?rollNumber=XX&sport=XX&category=XX ──────────
+// ─── GET /api/registrations/check ────────────────────────────────────────────
 const checkRegistration = async (req, res) => {
     try {
-        const { rollNumber, sport, category } = req.query;
+        const { rollNumber, email } = req.query;
 
-        if (!rollNumber) {
-            return res.status(400).json({ success: false, message: 'Roll number is required' });
+        if (!rollNumber && !email) {
+            return res.status(400).json({ success: false, message: 'Provide rollNumber or email to check.' });
         }
 
-        const query = { rollNumber: rollNumber.toUpperCase() };
-        if (sport) query.sport = sport;
-        if (category) query.category = category;
+        const query = rollNumber ? { rollNumber } : { email };
+        const existing = await Registration.findOne(query);
 
-        const registrations = await Registration.find(query).select(
-            'sport category status createdAt'
-        );
+        res.json({ success: true, registered: !!existing, data: existing || null });
 
-        return res.json({
-            success: true,
-            count: registrations.length,
-            data: registrations,
-        });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: 'Server error' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
-module.exports = { submitRegistration, checkRegistration };
+// ─── GET /api/registrations ───────────────────────────────────────────────────
+const getAllRegistrations = async (req, res) => {
+    try {
+        const registrations = await Registration.find().sort({ createdAt: -1 });
+        res.json({ success: true, data: registrations });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+// ─── PATCH /api/registrations/:id ────────────────────────────────────────────
+const updateRegistrationStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+
+        if (!['approved', 'rejected', 'pending'].includes(status)) {
+            return res.status(400).json({ success: false, message: 'Invalid status value.' });
+        }
+
+        const reg = await Registration.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+
+        if (!reg) {
+            return res.status(404).json({ success: false, message: 'Registration not found.' });
+        }
+
+        res.json({ success: true, data: reg });
+
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+module.exports = {
+    submitRegistration,
+    checkRegistration,
+    getAllRegistrations,
+    updateRegistrationStatus,
+};
