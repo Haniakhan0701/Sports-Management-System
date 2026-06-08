@@ -5,20 +5,20 @@ import Footer from "./components/footer";
 import Home from "./components/Home";
 import Games from "./pages/Games";
 import GameDetail from "./pages/GameDetail";
-import Schedule from "./pages/Schedule";  // ✅ Fixed: capital S
+import Schedule from "./pages/schedule";  // 
 import Standings from "./pages/Standings";
 import Announcements from "./pages/Announcements";  // ✅ Fixed: capital A
 import Media from "./pages/Media";  // ✅ Fixed: capital M
 import About from './pages/About';
 import Login from "./pages/Login";
-import Register from './pages/Register';
+import Register from './pages/register';
 import ScrollToTop from "./components/ScrollToTop";
-import Live from './pages/Live';  // ✅ Fixed: capital L
+import live from './pages/live';  // ✅ Fixed: capital l
 import AdminRoute from "./components/AdminRoute";
 import Dashboard from './pages/admin/Dashboard';
 import AdminGames from './pages/admin/AdminGames';
 import Scores from './pages/admin/Scores';
-import ManageAnnouncements from "./pages/admin/ManageAnnouncements";  // ✅ Fixed: capital M
+import manageAnnouncements from "./pages/admin/manageAnnouncements";  // ✅ Fixed: capital M
 import AnnouncementPopup from "./components/AnnouncementPopup";
 
 function App() {
