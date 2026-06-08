@@ -1,0 +1,50 @@
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db");
+
+connectDB();
+
+const app = express();
+
+// ✅ Cron jobs start
+require("./utils/cronJobs");
+
+// ✅ Match routes
+const matchRoutes = require("./routes/matchRoutes");
+
+// ✅ CORS setup
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://my-portfolio-roan-ten-19.vercel.app",
+        "https://www.haniakhan-ai.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+}));
+
+app.use(express.json());
+
+// ✅ Health check
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        message: 'Backend is running successfully!',
+        timestamp: new Date().toISOString(),
+        database: 'Connected'
+    });
+});
+
+// ✅ Routes
+app.use("/api/contact", require("./routes/contact"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/athletes", require("./routes/athletes"));
+app.use("/api/matches", matchRoutes);
+app.use("/api/announcements", require("./routes/announcementRoutes"));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

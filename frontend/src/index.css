@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    html,
+    body {
+        @apply m-0 p-0 overflow-x-hidden bg-[#1f1f1f] text-white;
+    }
+}
+
+@layer components {
+    /* Uniform Media Card Styles */
+    .media-card {
+        @apply w-full max-w-sm rounded-xl overflow-hidden shadow-lg cursor-pointer transition-all duration-300;
+    }
+
+    .media-card:hover {
+        @apply shadow-2xl;
+    }
+
+    /* Media Wrapper - Fixed height container */
+    .media-wrapper {
+        @apply relative w-full h-48 overflow-hidden bg-gray-900;
+    }
+
+    .media-wrapper img {
+        @apply w-full h-full object-cover transition-transform duration-300;
+    }
+
+    .media-card:hover .media-wrapper img {
+        @apply scale-105;
+    }
+
+    /* Media Content */
+    .media-content {
+        @apply p-4 bg-white;
+    }
+}
