@@ -18,7 +18,7 @@ import AdminRoute from "./components/AdminRoute";
 import Dashboard from './pages/admin/Dashboard';
 import AdminGames from './pages/admin/AdminGames';
 import Scores from './pages/admin/Scores';
-import manageAnnouncements from "./pages/admin/manageAnnouncements";  // ✅ Fixed: capital M
+import manageannouncements from "./pages/admin/manageannouncemnets";  // ✅ Fixed: capital M
 import AnnouncementPopup from "./components/AnnouncementPopup";
 
 function App() {
