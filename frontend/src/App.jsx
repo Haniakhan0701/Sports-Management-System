@@ -38,7 +38,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
-        <Route path="/live" element={<Live />} />
+        <Route path="/live" element={<live />} />
 
         {/* Admin Routes */}
         <Route path="/admin/dashboard" element={
