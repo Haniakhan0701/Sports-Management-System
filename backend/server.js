@@ -1,5 +1,3 @@
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '1.1.1.1']);
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -9,13 +7,13 @@ connectDB();
 
 const app = express();
 
-// ✅ Cron jobs start
+// Cron jobs start
 require("./utils/cronJobs");
 
-// ✅ Match routes
+// Match routes
 const matchRoutes = require("./routes/matchRoutes");
 
-// ✅ CORS setup
+// CORS setup
 app.use(cors({
     origin: [
         "http://localhost:5173",
@@ -29,7 +27,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Health check
+// Health check
 app.get("/api/health", (req, res) => {
     res.status(200).json({
         status: 'OK',
@@ -39,7 +37,7 @@ app.get("/api/health", (req, res) => {
     });
 });
 
-// ✅ Routes
+// Routes
 app.use("/api/contact", require("./routes/contact"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/athletes", require("./routes/athletes"));
