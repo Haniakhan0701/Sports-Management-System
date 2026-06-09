@@ -18,8 +18,7 @@ app.use(cors({
     origin: [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://my-portfolio-roan-ten-19.vercel.app",
-        "https://www.haniakhan-ai.com"
+        "https://willowy-pie-9068f0.netlify.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
