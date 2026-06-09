@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
 
-const API = "http://localhost:5000/api";
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 const Announcements = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');

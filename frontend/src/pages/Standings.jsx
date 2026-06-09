@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
 
-const API = "http://localhost:5000";
+const API = `${import.meta.env.VITE_API_URL}`;
 
 const deptColors = {
     CE:  { bg: 'bg-blue-50',    text: 'text-blue-600',    border: 'border-blue-200' },

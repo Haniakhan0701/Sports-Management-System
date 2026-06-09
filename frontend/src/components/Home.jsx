@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
 
-const API = "http://localhost:5000/api";
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 const SPORT_ICONS = {
   Cricket: "🏏", Football: "⚽", Badminton: "🏸",

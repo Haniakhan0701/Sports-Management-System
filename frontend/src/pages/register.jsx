@@ -66,7 +66,7 @@ const Register = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/createaccount", form);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/createaccount`, form);
       if (res.data.success) setSuccess(true);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong. Please try again.");

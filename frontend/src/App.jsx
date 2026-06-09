@@ -5,20 +5,20 @@ import Footer from "./components/footer";
 import Home from "./components/Home";
 import Games from "./pages/Games";
 import GameDetail from "./pages/GameDetail";
-import Schedule from "./pages/schedule";  // 
+import Schedule from "./pages/schedule";
 import Standings from "./pages/Standings";
-import Announcements from "./pages/Announcements";  // ✅ Fixed: capital A
-import Media from "./pages/Media";  // ✅ Fixed: capital M
+import Announcements from "./pages/announcements";
+import Media from "./pages/media";
 import About from './pages/About';
 import Login from "./pages/Login";
-import Register from './pages/register';
+import Register from './pages/Register';
 import ScrollToTop from "./components/ScrollToTop";
-import live from './pages/live';  // ✅ Fixed: capital l
+import Live from './pages/live';
 import AdminRoute from "./components/AdminRoute";
 import Dashboard from './pages/admin/Dashboard';
 import AdminGames from './pages/admin/AdminGames';
 import Scores from './pages/admin/Scores';
-import manageannouncements from "./pages/admin/manageannouncements";  // ✅ Fixed: capital M
+import ManageAnnouncements from "./pages/admin/manageannouncements";
 import AnnouncementPopup from "./components/AnnouncementPopup";
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
-        <Route path="/live" element={<live />} />
+        <Route path="/live" element={<Live />} />
 
         {/* Admin Routes */}
         <Route path="/admin/dashboard" element={

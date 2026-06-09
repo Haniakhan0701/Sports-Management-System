@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const API = "http://localhost:5000/api";
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 const AnnouncementPopup = () => {
     const [announcements, setAnnouncements] = useState([]);

@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     localStorage.clear();
 
-    const res = await axios.post("http://localhost:5000/api/auth/login", {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
       email,
       password,
     });
