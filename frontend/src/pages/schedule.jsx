@@ -27,7 +27,7 @@ const DEPT_COLORS = {
 const OFFICIAL_PDFS = [
   {
     id: 1,
-    title: "Sports Week 2027 - Complete Schedule",
+    title: "Sports Week & Funday 2026 (Girls' Schedule)",
     month: "February 2026-2027",
     size: "2.4 MB",
     file: "/pdfs/my1.pdf",
@@ -35,7 +35,7 @@ const OFFICIAL_PDFS = [
   },
   {
     id: 2,
-    title: "January 2027 - Knockout Matches",
+    title: "January 2026 -Department of CE Schedule",
     month: "January 2026-2027",
     size: "1.8 MB",
     file: "/pdfs/my2.pdf",
@@ -43,8 +43,8 @@ const OFFICIAL_PDFS = [
   },
   {
     id: 3,
-    title: "December 2026 - League Matches",
-    month: "December 2026-2027",
+    title: "Department of CE (Girls' Schedule)",
+    month: "December 2022-2026",
     size: "2.1 MB",
     file: "/pdfs/my3.pdf",
     isNew: false,
