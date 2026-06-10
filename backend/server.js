@@ -13,12 +13,12 @@ require("./utils/cronJobs");
 // Match routes
 const matchRoutes = require("./routes/matchroutes");
 
-// CORS setup
+// CORS setup - FIXED (removed trailing slash)
 app.use(cors({
     origin: [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://willowy-pie-9068f0.netlify.app"
+        "https://willowy-pie-9068f0.netlify.app"  // Removed trailing slash
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
@@ -33,6 +33,22 @@ app.get("/api/health", (req, res) => {
         message: 'Backend is running successfully!',
         timestamp: new Date().toISOString(),
         database: 'Connected'
+    });
+});
+
+// ✅ ADD THIS - Root route handler
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Backend API is running",
+        endpoints: {
+            health: "/api/health",
+            contact: "/api/contact",
+            auth: "/api/auth",
+            athletes: "/api/athletes",
+            matches: "/api/matches",
+            announcements: "/api/announcements"
+        }
     });
 });
 
