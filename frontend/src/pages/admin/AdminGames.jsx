@@ -71,6 +71,11 @@ export default function AdminGames() {
     if (form.teamA === form.teamB) return showToast("Teams cannot be the same!", "error");
     setSubmitting(true);
     try {
+      const formToSend = { ...form };
+if (formToSend.scheduledAt) {
+  // Treat the input as PKT (UTC+5) and convert to proper ISO string
+  formToSend.scheduledAt = new Date(formToSend.scheduledAt + ":00+05:00").toISOString();
+}
       await axios.post(`${API}/matches`, form, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
