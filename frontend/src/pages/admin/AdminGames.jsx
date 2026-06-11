@@ -76,7 +76,7 @@ if (formToSend.scheduledAt) {
   // Treat the input as PKT (UTC+5) and convert to proper ISO string
   formToSend.scheduledAt = new Date(formToSend.scheduledAt + ":00+05:00").toISOString();
 }
-      await axios.post(`${API}/matches`, form, {
+    await axios.post(`${API}/matches`, formToSend, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       showToast("Match created successfully! ✅");
