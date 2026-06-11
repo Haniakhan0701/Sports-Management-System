@@ -157,12 +157,18 @@ export default function AdminGames() {
 
   const sportIcon = (name) => SPORTS.find(s => s.name === name)?.icon || "🏆";
 
-  const formatDate = (d) => {
-    if (!d) return "";
-    const dt = new Date(d);
-    return dt.toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" }) +
-      " · " + dt.toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit" });
-  };
+ const formatDate = (d) => {
+  if (!d) return "";
+  const dt = new Date(d);
+  return dt.toLocaleDateString("en-PK", { 
+    timeZone: "Asia/Karachi",   // ← ADD THIS
+    day: "numeric", month: "short", year: "numeric" 
+  }) +
+    " · " + dt.toLocaleTimeString("en-PK", { 
+      timeZone: "Asia/Karachi",  // ← ADD THIS
+      hour: "2-digit", minute: "2-digit" 
+    });
+};
 
   return (
     <>
