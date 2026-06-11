@@ -27,7 +27,11 @@ const DEPT_COLORS = {
 const OFFICIAL_PDFS = [
   {
     id: 1,
+<<<<<<< HEAD
     title: "Sports Week & Funday 2026 (Girls' Schedule)",
+=======
+    title: "Sports Week 2026 - Complete Schedule",
+>>>>>>> ce173f0 (Added BZU trophy favicon)
     month: "February 2026-2027",
     size: "2.4 MB",
     file: "/pdfs/my1.pdf",

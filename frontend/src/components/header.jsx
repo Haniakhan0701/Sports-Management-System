@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
 import { useAuth } from "../context/AuthContext";
+import bzuLogo from "../assets/bzu logo.png";
 
 const API = `${import.meta.env.VITE_API_URL}/api`;
 
@@ -65,21 +66,31 @@ const Header = () => {
                 <div className="flex items-center justify-between">
 
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <div className="relative">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                                <i className='bx bx-trophy text-white text-2xl'></i>
-                            </div>
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full border-2 border-white"></div>
-                        </div>
-                        <div className="hidden sm:block">
-                            <h1 className="font-bold text-gray-800 leading-tight">
-                                <span className="text-lg">BZU ENGINEERING</span>
-                                <br />
-                                <span className="text-xs tracking-wider text-gray-500">SPORTS • {currentYear}</span>
-                            </h1>
-                        </div>
-                    </Link>
+
+
+
+                   <Link to="/" className="flex items-center gap-3 group">
+    <div className="relative">
+        <img
+            src={bzuLogo}
+            alt="BZU Logo"
+            className="w-14 h-14 object-contain"
+        />
+    </div>
+
+    <div className="hidden sm:block">
+        <h1 className="font-bold text-gray-800 leading-tight">
+            <span className="text-lg">BZU ENGINEERING</span>
+            <br />
+            <span className="text-xs tracking-wider text-gray-500">
+                SPORTS • {currentYear}
+            </span>
+        </h1>
+    </div>
+</Link>
+
+
+
 
                     {/* Desktop Navigation */}
                     <nav className="hidden lg:flex items-center space-x-1">
