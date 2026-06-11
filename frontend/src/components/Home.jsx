@@ -3,9 +3,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import 'boxicons/css/boxicons.min.css';
-import SportsScene3D from '../components/SportsScene3D'
-
-
 
 const API = `${import.meta.env.VITE_API_URL}/api`;
 
@@ -137,12 +134,6 @@ const Home = () => {
               </Link>
             </div>
           </motion.div>
-
-   {/* 3D Sports Scene — ADD THIS BELOW */}
-          <div className="absolute right-0 top-0 w-full md:w-1/2 h-full hidden md:block">
-            <SportsScene3D />
-          </div>
-
         </div>
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-amber-400 to-emerald-500"></div>
       </section>
